@@ -1,0 +1,18 @@
+# Service de l'application wil42/playground.
+# type LoadBalancer : le ServiceLB de K3s ouvre le port 8888 sur le nœud,
+# et k3d le publie sur l'hôte (127.0.0.1:8888). Contrairement à un
+# "kubectl port-forward", ça survit au remplacement du pod lors du passage v1 -> v2.
+apiVersion: v1
+kind: Service
+metadata:
+  name: wil-playground
+  labels:
+    app: wil-playground
+spec:
+  type: LoadBalancer
+  selector:
+    app: wil-playground
+  ports:
+    - name: http
+      port: 8888
+      targetPort: http

@@ -1,0 +1,38 @@
+# Application wil42/playground (Docker Hub, tags v1 et v2, port 8888).
+# Source de vérité : dossier manifests/ du repo Git surveillé par Argo CD.
+# Pour changer de version : modifier la ligne "image:" ci-dessous, commit, push.
+# Pas de "namespace:" ici : c'est l'Application Argo CD qui cible le namespace dev.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wil-playground
+  labels:
+    app: wil-playground
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wil-playground
+  template:
+    metadata:
+      labels:
+        app: wil-playground
+    spec:
+      containers:
+        - name: wil-playground
+          image: wil42/playground:v1
+          ports:
+            - name: http
+              containerPort: 8888
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 2
+            periodSeconds: 5
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              memory: 128Mi
